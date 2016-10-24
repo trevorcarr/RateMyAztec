@@ -15,11 +15,6 @@ function main() {
     sectionFieldRating.className = "sectionFieldRating column"
     sectionRow.appendChild(sectionFieldRating);
 
-//    var sectionFieldClarity = document.createElement('div');
-//    sectionFieldClarity.innerHTML = "Clarity";
-//    sectionFieldClarity.className = "sectionFieldClarity column"
-//    sectionRow.appendChild(sectionFieldClarity);
-
     var sectionFieldDifficulty = document.createElement('div');
     sectionFieldDifficulty.innerHTML = "Difficulty";
     sectionFieldDifficulty.className = "sectionFieldDifficulty column"
@@ -30,17 +25,12 @@ function main() {
     sectionFieldLink.className = "sectionFieldLink column";
     sectionRow.appendChild(sectionFieldLink);
 
-    for (i = 0; i < length; i++) //only iterate through cells which contain a professor name
+    for (i = 0; i < length; i++) //iterate through professor names 
     {
         var sectionFieldRating = document.createElement('div'); //create new divs to add to sectionMeeting
         sectionFieldRating.innerHTML = "N/A";
         sectionFieldRating.className = "sectionFieldRating column"
         test[i].appendChild(sectionFieldRating);
-
-//        var sectionFieldClarity = document.createElement('div');
-//        sectionFieldClarity.innerHTML = "N/A";
-//        sectionFieldClarity.className = "sectionFieldClarity column"
-//        test[i].appendChild(sectionFieldClarity);
 
         var sectionFieldDifficulty = document.createElement('div');
         sectionFieldDifficulty.innerHTML = "N/A";
@@ -145,9 +135,6 @@ function addContentToWebPortal(responseText, profURL, professors){
     var overall = ratings[0].innerHTML.trim().concat(scale);
     var wouldTakeAgain = ratings[1].innerHTML.trim().concat(scale);
     var difficulty = ratings[2].innerHTML.trim().concat(scale);
-//    console.log(difficulty);
-
-//    console.log(overall);
     tmp.remove();
 
 
@@ -162,24 +149,14 @@ function addContentToWebPortal(responseText, profURL, professors){
         if ((firstName == proffName.charAt(1)) && (lastName = proflName)){
                 test[i].getElementsByClassName("sectionFieldRating column")[0].innerText = overall;
                 test[i].getElementsByClassName('sectionFieldDifficulty column')[0].innerText = difficulty;
-                console.log(lastName + i);
-
-//                console.log(numRatings);
                     if (numRatings == '1') {
                         test[i].getElementsByClassName('sectionFieldLink column')[0].innerHTML = '<a href="' + profURL + '" target="_blank">' + numRatings + ' rating</a>';
                     } else {
                         test[i].getElementsByClassName('sectionFieldLink column')[0].innerHTML = '<a href="' + profURL + '" target="_blank">' + numRatings + ' ratings</a>';
                     }
-
                 break
-
                 }
-//                break
-
             }
 }
 
-
-
 main();
-
