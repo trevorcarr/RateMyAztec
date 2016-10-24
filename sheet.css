@@ -1,0 +1,265 @@
+.sectionFieldRating{
+    width: 50px;
+    font-family:
+    display: inline block;
+    vertical-align: top;
+    font-size: 12px;
+    font-family: 'Roboto', 'Arial', 'Helvetica', sans-serif;
+
+}
+
+.sectionFieldClarity{
+     width: 50px;
+     font-family:
+     display: inline block;
+     vertical-align: top;
+     font-size: 12px;
+     font-family: 'Roboto', 'Arial', 'Helvetica', sans-serif;
+}
+
+.sectionFieldDifficulty{
+     width: 70px;
+     font-family:
+     display: inline block;
+     vertical-align: top;
+     font-size: 12px;
+     font-family: 'Roboto', 'Arial', 'Helvetica', sans-serif;
+}
+
+.sectionFieldLink{
+     width: 60px;
+     font-family:
+     display: inline block;
+     vertical-align: top;
+     font-size: 12px;
+     font-family: 'Roboto', 'Arial', 'Helvetica', sans-serif;
+}
+
+.section1RecordEvenReg, #sectionRowTitles {
+    width: 1100px !important
+}
+
+.section1RecordOddReg, #sectionRowTitles {
+    width: 1100px !important
+}
+.sectionTitleRecrodReg, #sectionRowTitles{
+    width: 1100px !important
+}
+
+.sectionRecordOddReg, #sectionListWrapper{
+    width: 1100px !important
+}
+.sectionRecordEvenReg, #sectionListWrapper{
+    width 1100px !important
+
+}
+.infoContainer{
+    width: 1100px !important
+    }
+.bodyMainContent{
+    width 1500px !important}
+
+.bodyWrapper{
+    width 1500px !important
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.ratingButton {
+    background-color:#DCE8FF;
+    -moz-border-radius:28px;
+    -webkit-border-radius:28px;
+    border-radius:28px;
+    border: none;
+    cursor:pointer;
+    color:#336699;
+    font-family:Verdana;
+    font-size:8.5px;
+    font-weight: 600;
+    padding:1px 6px;
+    text-decoration:none;
+    box-shadow: 1px 1px 1px grey;
+    width: 85px;
+    display:block-inline;
+    margin: 1px 0px 4px 0px;
+}
+
+.ratingButton:active {
+    position:relative;
+    top:1px;
+}
+
+.ratingHeader{
+    width: 40px;
+    }
+
+.popup {
+    position: absolute;
+    top: -141px;
+    left: 253px;
+    margin: 100px auto;
+    width: 210px;
+    height: 110px;
+    background-color: #FFFFFF;
+    border: 2px solid #D6D6D6;
+    z-index: 100000000000000000;
+}
+/* .popup div {
+	padding: 2%;
+}  */
+.notFoundPopup {
+    position: absolute;
+    top: -141px;
+    left: 253px;
+    margin: 100px auto;
+    width: 210px;
+    height: 50px;
+    background-color: #FFFFFF;
+    border: 2px solid #D6D6D6;
+    z-index: 100000000000000000;
+}
+
+.popup .heading {
+    text-decoration: bold;
+}
+.section1RecordOddReg, #sectionRowTitles {
+    width: 1100px !important
+}
+.sectionTitleRecrodReg, #sectionRowTitles{
+    width: 1100px !important
+}
+
+.infoContainer{
+    width: 1100px !important
+    }
+
+.heading {
+    display: block;
+    background-color: #f8d78e;
+    font-family: verdana;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #003366;
+    position: absolute;
+    width: 210px;
+    height: 10px;
+    text-align: center;
+    padding: 1px 0px 6px 0px; 
+}
+
+.heading a:hover {
+    color: blue;
+}
+
+.title {
+    display: block;
+    font-family: verdana;
+    font-size: 10px;
+    font-weight: 600;
+    color: #000000;
+    position: relative;
+    text-align: center;
+}
+
+.text {
+    font-family: verdana;
+    font-size: 10px;
+    position: relative;
+    text-align: center; 
+}
+
+.overall div {
+    display: block;
+    position: relative;
+    width: 105px;
+    height: 20px;
+    top: 25px;
+    left: 20px;
+}
+/* 
+.avgGrade div {
+	display: block;
+    position: relative;
+    width: 105px;
+    height: 20px;
+    top: 30px;
+    left: 50px;
+}
+
+.helpfulness div {
+    display: block;
+    position: relative;
+    width: 70px;
+    height: 20px;
+    top: 70px;
+    left: 55px; 
+}
+
+.clarity div{
+    display: block;
+    position: relative;
+    width: 70px;
+    height: 20px;
+    top: 65px;
+    left: 85px; 
+} */
+
+
+
+
+.easiness div {
+ 	display: block;
+    position: relative;
+    width: 70px;
+    height: 20px;
+    top: 75px;
+    left: 20px; 
+}
+
+.numRatings  {
+    /*display: block;*/
+    width: 210px;
+    height: 5px;
+    position: relative;
+    font-family: verdana;
+    font-size: 10px;
+    color: #ff3c3a;
+    text-align: center;
+    text-transform: lowercase;
+    text-decoration: underline;
+    top: 20px;
+}
+
+.numRatings a:hover {
+    color: #fe0106;
+}
+
+.idk {
+    display: block;
+    font-family: verdana;
+    font-size: 11px;
+    position: absolute;
+    width: 210px;
+    height: 25px;
+    top: 25px;
+    text-align: center;
+} */
