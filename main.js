@@ -3,7 +3,6 @@
 /* Sept.17.2016                                                                         	  */
 
 function main() {
-
     var test = document.getElementsByClassName('sectionMeeting');
     var sectionRow = document.getElementById('sectionRowTitles');
     var length = test.length;
@@ -25,8 +24,9 @@ function main() {
     sectionFieldLink.className = "sectionFieldLink column";
     sectionRow.appendChild(sectionFieldLink);
 
-    for (i = 0; i < length; i++) //iterate through professor names 
+    for (i = 0; i < length; i++) //only iterate through cells which contain a professor name
     {
+
         var sectionFieldRating = document.createElement('div'); //create new divs to add to sectionMeeting
         sectionFieldRating.innerHTML = "N/A";
         sectionFieldRating.className = "sectionFieldRating column"
@@ -41,8 +41,10 @@ function main() {
         sectionFieldLink.innerHTML = "N/A";
         sectionFieldLink.className = "sectionFieldLink column";
         test[i].appendChild(sectionFieldLink);
-
         var instructor = document.getElementsByClassName('sectionFieldInstructor');
+
+        if(instructor[i+1].innerText == undefined){
+            return; }
         var profName = instructor[i+1].innerText.slice(0, -1); //slice '&nbsp;'' character
 
         if (profName != 'O. GRAD' && profName != '') {
@@ -57,23 +59,20 @@ function main() {
             chrome.runtime.sendMessage({
                         url: searchURL
                     }, function(responseText) {
-                        responseText = responseText.replace('http://blog.ratemyprofessors.com/wp-content/uploads/2015/01/WNOs6.5_RMP_72x72.jpg', '');
-                        responseText = responseText.replace('/assets/chilis/warm-chili.png', '');
-                        responseText = responseText.replace('/assets/chilis/cold-chili.png', '');
-                        responseText = responseText.replace('/assets/mobileAppPromo.png', '');
-                        responseText = responseText.replace('/assets/ok.png', '');
+                    responseText = responseText.replace('http://blog.ratemyprofessors.com/wp-content/uploads/2015/01/WNOs6.5_RMP_72x72.jpg', '');
+                    responseText = responseText.replace('/assets/chilis/warm-chili.png', '');
+                    responseText = responseText.replace('/assets/chilis/cold-chili.png', '');
+                    responseText = responseText.replace('/assets/mobileAppPromo.png', '');
+                    responseText = responseText.replace('/assets/ok.png', '');
+                    responseText = responseText.replace('/assets/chilis/new-hot-chili.png', '');
                         processFirstRequest(responseText, professors);
                     });
         }
+        else{
+            return 0;
+            }
     }
 }
-
-function checkForSubstitutions(firstName, searchName){
-    if (firstName == "L" && searchName == "RIGGINS"){
-        firstName = "A";
-        }
-    return firstName;
-    }
 
 function processFirstRequest(responseText, professors){
     var tmp = document.createElement('div'); //make a temp element so that we can search through its html
@@ -84,7 +83,8 @@ function processFirstRequest(responseText, professors){
         var nameArray = professors[i].split(' '); //check if professor's last name is two words to include in search
         var firstName = nameArray[0].substring(0,1); //remove period from first initial
         var lastName = nameArray[1];
-        firstName = checkForSubstitutions(firstName, lastName);
+        firstName = checkForSubsFirstName(firstName, lastName);
+        lastName = checkForSubsLastName(firstName, lastName);
 
         for(j=0; j < foundProfs.length; j++){
             var tmp = document.createElement('div');
@@ -92,38 +92,37 @@ function processFirstRequest(responseText, professors){
             var name = tmp.getElementsByClassName('main')[0].innerText;
             searchLastName = name.split(',')[0].toUpperCase();
             searchFirstName = name.split(',')[1].charAt(1);
-
-            if((searchLastName == lastName) && (firstName == searchFirstName)){
+            if((searchLastName.charAt(2) == lastName.charAt(2)) && (searchFirstName.charAt(1) == firstName.charAt(1))){
                 var link = tmp.getElementsByTagName('a');
                 profURL = 'http://www.ratemyprofessors.com/' + link[0].toString().slice(25); //this is the URL
                 chrome.runtime.sendMessage({
                     url: this.profURL
                 }, function(responseText) {
+                    responseText = responseText.replace('/assets/ok.png', '');
                     responseText = responseText.replace('http://blog.ratemyprofessors.com/wp-content/uploads/2015/01/WNOs6.5_RMP_72x72.jpg', '');
                     responseText = responseText.replace('/assets/chilis/warm-chili.png', '');
                     responseText = responseText.replace('/assets/chilis/cold-chili.png', '');
                     responseText = responseText.replace('/assets/mobileAppPromo.png', '');
-                    responseText = responseText.replace('/assets/ok.png', '');
-                    addContentToWebPortal(responseText, profURL, professors);
+                    responseText = responseText.replace('/assets/chilis/new-hot-chili.png', '');
+                    addContentToWebPortal(responseText);
                 });
                 }
             }
     }
 }
 
-function addContentToWebPortal(responseText, profURL, professors){
+function addContentToWebPortal(responseText){
 
     var test = document.getElementsByClassName('sectionMeeting');
-    console.log(test);
     var sectionRow = document.getElementById('sectionRowTitles');
-
     var tmp = document.createElement('div');
     tmp.innerHTML = responseText;
-//    console.log(tmp.innerHTML);
+    if(tmp.getElementsByClassName('pfname')[0] == undefined){
+        return;}
+
     var proffName = tmp.getElementsByClassName('pfname')[0].innerText;
     var proflName = tmp.getElementsByClassName('plname')[0].innerText.substring(15).toUpperCase();
-    var proffURL = tmp.getElementsByClassName()
-
+    var profURL = tmp.getElementsByTagName('link')[1].getAttribute("href");
     var ratingInfo = tmp.getElementsByClassName('left-breakdown')[0];
     var numRatings = tmp.getElementsByClassName('table-toggle rating-count active')[0].innerText;
     numRatings = numRatings.slice(9).split(' ')[0] //check to see if "ratings" is singular or plural
@@ -137,26 +136,45 @@ function addContentToWebPortal(responseText, profURL, professors){
     var difficulty = ratings[2].innerHTML.trim().concat(scale);
     tmp.remove();
 
-
-    for(i=0; i <= test.length; i++){
-        var instructor = test[i].getElementsByClassName('sectionFieldInstructor');
-        profName = instructor[0].innerText.slice(0, -1);
-        var nameArray = profName.split(' ');
-        var firstName = nameArray[0].substring(0,1);
-        var lastName = nameArray[1];
-        firstName = checkForSubstitutions(firstName, lastName);
-
-        if ((firstName == proffName.charAt(1)) && (lastName = proflName)){
-                test[i].getElementsByClassName("sectionFieldRating column")[0].innerText = overall;
-                test[i].getElementsByClassName('sectionFieldDifficulty column')[0].innerText = difficulty;
+        for(i=0; i <= test.length; i++){
+        if(test[i] == null){
+            return;
+            }
+            var instructor = test[i].getElementsByClassName('sectionFieldInstructor');
+            profName = instructor[0].innerText.slice(0, -1);
+            var nameArray = profName.split(' ');
+            var firstName = nameArray[0].substring(0,1);
+            var lastName = nameArray[1];
+            firstName = checkForSubsFirstName(firstName, lastName);
+            lastName = checkForSubsLastName(firstName, lastName);
+            if ((lastName.charAt(2) == proflName.charAt(2)) && (firstName == proffName.charAt(1))){
+                    test[i].getElementsByClassName("sectionFieldRating column")[0].innerText = overall;
+                    test[i].getElementsByClassName('sectionFieldDifficulty column')[0].innerText = difficulty;
                     if (numRatings == '1') {
                         test[i].getElementsByClassName('sectionFieldLink column')[0].innerHTML = '<a href="' + profURL + '" target="_blank">' + numRatings + ' rating</a>';
-                    } else {
+                        } else {
                         test[i].getElementsByClassName('sectionFieldLink column')[0].innerHTML = '<a href="' + profURL + '" target="_blank">' + numRatings + ' ratings</a>';
-                    }
-                break
+                        }
                 }
-            }
+     }
+     return;
 }
+
+function checkForSubsFirstName(firstName, searchName){
+    if (firstName == "L" && searchName == "RIGGINS"){
+        firstName = "A";
+        }
+    else if (firstName == "W" && searchName == "ROOT"){
+        firstName = "B";
+    }
+    return firstName;
+    }
+
+function checkForSubsLastName(firstName, lastName){
+    if (firstName == "S" && lastName == "Lindeneau"){
+        lastName = "LINDENEAU"
+        }
+        return lastName;
+    }
 
 main();
