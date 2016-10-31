@@ -3,11 +3,16 @@
 /* Sept.17.2016                                                                         	  */
 
 function main() {
+
     var test = document.getElementsByClassName('sectionMeeting');
     var sectionRow = document.getElementById('sectionRowTitles');
     var length = test.length;
     var professors = [];
     var profCount = 0;
+
+    if(sectionRow == null){
+        return;
+        }
 
     var sectionFieldRating = document.createElement('div');
     sectionFieldRating.innerHTML = "Rating";
@@ -47,14 +52,12 @@ function main() {
             return; }
         var profName = instructor[i+1].innerText.slice(0, -1); //slice '&nbsp;'' character
 
-        if (profName != 'O. GRAD' && profName != '') {
+        if ((profName.localeCompare('O. GRAD') != 0) && (profName.localeCompare(' ') != 0)) {
             professors.push(profName); //slice remaining space at end & push to professor array
-            var div = instructor[i]; //cell where the button will go
             var searchName = '';
             var nameArray = professors[profCount].split(' '); //check if professor's last name is two words to include in search
             searchName = nameArray[1];
             var searchURL = 'http://www.ratemyprofessors.com/search.jsp?queryBy=teacherName&schoolName=San+Diego+State+University&queryoption=HEADER&query=' + searchName + '&facetSearch=true';
-            div.profURL = '';
             profCount++;
             chrome.runtime.sendMessage({
                         url: searchURL
@@ -68,9 +71,6 @@ function main() {
                         processFirstRequest(responseText, professors);
                     });
         }
-        else{
-            return 0;
-            }
     }
 }
 
@@ -78,13 +78,11 @@ function processFirstRequest(responseText, professors){
     var tmp = document.createElement('div'); //make a temp element so that we can search through its html
     tmp.innerHTML = responseText;
     var foundProfs = tmp.getElementsByClassName('listing PROFESSOR');
-
     for(i=0; i < professors.length; i++){
         var nameArray = professors[i].split(' '); //check if professor's last name is two words to include in search
         var firstName = nameArray[0].substring(0,1); //remove period from first initial
-        var lastName = nameArray[1];
+        var lastName = nameArray[1].toUpperCase();
         firstName = checkForSubsFirstName(firstName, lastName);
-        lastName = checkForSubsLastName(firstName, lastName);
 
         for(j=0; j < foundProfs.length; j++){
             var tmp = document.createElement('div');
@@ -92,7 +90,8 @@ function processFirstRequest(responseText, professors){
             var name = tmp.getElementsByClassName('main')[0].innerText;
             searchLastName = name.split(',')[0].toUpperCase();
             searchFirstName = name.split(',')[1].charAt(1);
-            if((searchLastName.charAt(2) == lastName.charAt(2)) && (searchFirstName.charAt(1) == firstName.charAt(1))){
+
+            if((lastName.localeCompare(searchLastName) == 0) && (firstName == searchFirstName)){
                 var link = tmp.getElementsByTagName('a');
                 profURL = 'http://www.ratemyprofessors.com/' + link[0].toString().slice(25); //this is the URL
                 chrome.runtime.sendMessage({
@@ -106,22 +105,20 @@ function processFirstRequest(responseText, professors){
                     responseText = responseText.replace('/assets/chilis/new-hot-chili.png', '');
                     addContentToWebPortal(responseText);
                 });
+                break;
                 }
             }
     }
 }
 
 function addContentToWebPortal(responseText){
-
     var test = document.getElementsByClassName('sectionMeeting');
     var sectionRow = document.getElementById('sectionRowTitles');
     var tmp = document.createElement('div');
     tmp.innerHTML = responseText;
-    if(tmp.getElementsByClassName('pfname')[0] == undefined){
-        return;}
 
-    var proffName = tmp.getElementsByClassName('pfname')[0].innerText;
-    var proflName = tmp.getElementsByClassName('plname')[0].innerText.substring(15).toUpperCase();
+    var proffName = tmp.getElementsByClassName('pfname')[0].innerText.replace(/\s/g, '');
+    var proflName = tmp.getElementsByClassName('plname')[0].innerText.substring(15).toUpperCase().replace(/\s/g, '');
     var profURL = tmp.getElementsByTagName('link')[1].getAttribute("href");
     var ratingInfo = tmp.getElementsByClassName('left-breakdown')[0];
     var numRatings = tmp.getElementsByClassName('table-toggle rating-count active')[0].innerText;
@@ -137,17 +134,20 @@ function addContentToWebPortal(responseText){
     tmp.remove();
 
         for(i=0; i <= test.length; i++){
-        if(test[i] == null){
-            return;
-            }
+            if(test[i] == null){
+                return; }
+
             var instructor = test[i].getElementsByClassName('sectionFieldInstructor');
             profName = instructor[0].innerText.slice(0, -1);
+            if((profName.localeCompare('O. GRAD') == 0) || (profName.localeCompare(' ') == 0)){
+                return; }
+
             var nameArray = profName.split(' ');
             var firstName = nameArray[0].substring(0,1);
-            var lastName = nameArray[1];
+            var lastName = nameArray[1].toUpperCase();
             firstName = checkForSubsFirstName(firstName, lastName);
-            lastName = checkForSubsLastName(firstName, lastName);
-            if ((lastName.charAt(2) == proflName.charAt(2)) && (firstName == proffName.charAt(1))){
+
+            if ((lastName.localeCompare(proflName) == 0) && (firstName.localeCompare(proffName.charAt(0)) == 0)){
                     test[i].getElementsByClassName("sectionFieldRating column")[0].innerText = overall;
                     test[i].getElementsByClassName('sectionFieldDifficulty column')[0].innerText = difficulty;
                     if (numRatings == '1') {
@@ -168,13 +168,6 @@ function checkForSubsFirstName(firstName, searchName){
         firstName = "B";
     }
     return firstName;
-    }
-
-function checkForSubsLastName(firstName, lastName){
-    if (firstName == "S" && lastName == "Lindeneau"){
-        lastName = "LINDENEAU"
-        }
-        return lastName;
     }
 
 main();
