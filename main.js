@@ -10,10 +10,6 @@ function main() {
     var professors = [];
     var profCount = 0;
 
-    if(sectionRow == null){
-        return;
-        }
-
     var sectionFieldRating = document.createElement('div');
     sectionFieldRating.innerHTML = "Rating";
     sectionFieldRating.className = "sectionFieldRating column"
@@ -29,9 +25,8 @@ function main() {
     sectionFieldLink.className = "sectionFieldLink column";
     sectionRow.appendChild(sectionFieldLink);
 
-    for (i = 0; i < length; i++) //only iterate through cells which contain a professor name
+    for (i = 0; i < length; i++) //iterate through every row
     {
-
         var sectionFieldRating = document.createElement('div'); //create new divs to add to sectionMeeting
         sectionFieldRating.innerHTML = "N/A";
         sectionFieldRating.className = "sectionFieldRating column"
@@ -46,30 +41,30 @@ function main() {
         sectionFieldLink.innerHTML = "N/A";
         sectionFieldLink.className = "sectionFieldLink column";
         test[i].appendChild(sectionFieldLink);
-        var instructor = document.getElementsByClassName('sectionFieldInstructor');
 
+        var instructor = document.getElementsByClassName('sectionFieldInstructor');
         if(instructor[i+1].innerText == undefined){
             return; }
-        var profName = instructor[i+1].innerText.slice(0, -1); //slice '&nbsp;'' character
 
+        var profName = instructor[i+1].innerText.slice(0, -1); //slice '&nbsp;'' character
         if ((profName.localeCompare('O. GRAD') != 0) && (profName.localeCompare(' ') != 0)) {
-            professors.push(profName); //slice remaining space at end & push to professor array
-            var searchName = '';
-            var nameArray = professors[profCount].split(' '); //check if professor's last name is two words to include in search
-            searchName = nameArray[1];
-            var searchURL = 'http://www.ratemyprofessors.com/search.jsp?queryBy=teacherName&schoolName=San+Diego+State+University&queryoption=HEADER&query=' + searchName + '&facetSearch=true';
-            profCount++;
-            chrome.runtime.sendMessage({
-                        url: searchURL
-                    }, function(responseText) {
-                    responseText = responseText.replace('http://blog.ratemyprofessors.com/wp-content/uploads/2015/01/WNOs6.5_RMP_72x72.jpg', '');
-                    responseText = responseText.replace('/assets/chilis/warm-chili.png', '');
-                    responseText = responseText.replace('/assets/chilis/cold-chili.png', '');
-                    responseText = responseText.replace('/assets/mobileAppPromo.png', '');
-                    responseText = responseText.replace('/assets/ok.png', '');
-                    responseText = responseText.replace('/assets/chilis/new-hot-chili.png', '');
-                        processFirstRequest(responseText, professors);
-                    });
+                    professors.push(profName); //slice remaining space at end & push to professor array
+                                var searchName = '';
+                                var nameArray = professors[profCount].split(' '); //check if professor's last name is two words to include in search
+                                searchName = nameArray[1];
+                                var searchURL = 'http://www.ratemyprofessors.com/search.jsp?queryBy=teacherName&schoolName=San+Diego+State+University&queryoption=HEADER&query=' + searchName + '&facetSearch=true';
+                                profCount++;
+                                chrome.runtime.sendMessage({
+                                            url: searchURL
+                                        }, function(responseText) {
+                                        responseText = responseText.replace('http://blog.ratemyprofessors.com/wp-content/uploads/2015/01/WNOs6.5_RMP_72x72.jpg', '');
+                                        responseText = responseText.replace('/assets/chilis/warm-chili.png', '');
+                                        responseText = responseText.replace('/assets/chilis/cold-chili.png', '');
+                                        responseText = responseText.replace('/assets/mobileAppPromo.png', '');
+                                        responseText = responseText.replace('/assets/ok.png', '');
+                                        responseText = responseText.replace('/assets/chilis/new-hot-chili.png', '');
+                                            processFirstRequest(responseText, professors);
+                                        });
         }
     }
 }
@@ -105,14 +100,15 @@ function processFirstRequest(responseText, professors){
                     responseText = responseText.replace('/assets/chilis/new-hot-chili.png', '');
                     addContentToWebPortal(responseText);
                 });
-                break;
+                return;
                 }
             }
     }
 }
 
 function addContentToWebPortal(responseText){
-    var test = document.getElementsByClassName('sectionMeeting');
+
+    var sectionMeeting = document.getElementsByClassName('sectionMeeting');
     var sectionRow = document.getElementById('sectionRowTitles');
     var tmp = document.createElement('div');
     tmp.innerHTML = responseText;
@@ -133,31 +129,31 @@ function addContentToWebPortal(responseText){
     var difficulty = ratings[2].innerHTML.trim().concat(scale);
     tmp.remove();
 
-        for(i=0; i <= test.length; i++){
-            if(test[i] == null){
-                return; }
+    for(i=0; i <= sectionMeeting.length; i++){
+        if((typeof sectionMeeting[i]) === undefined){
+            return; }
 
-            var instructor = test[i].getElementsByClassName('sectionFieldInstructor');
-            profName = instructor[0].innerText.slice(0, -1);
-            if((profName.localeCompare('O. GRAD') == 0) || (profName.localeCompare(' ') == 0)){
-                return; }
+        var instructor = sectionMeeting[i].getElementsByClassName('sectionFieldInstructor');
+        profName = instructor[0].innerText.slice(0, -1);
+        if((profName.localeCompare('O. GRAD') == 0) || (profName.localeCompare(' ') == 0)){
+            return; }
 
-            var nameArray = profName.split(' ');
-            var firstName = nameArray[0].substring(0,1);
-            var lastName = nameArray[1].toUpperCase();
-            firstName = checkForSubsFirstName(firstName, lastName);
-
-            if ((lastName.localeCompare(proflName) == 0) && (firstName.localeCompare(proffName.charAt(0)) == 0)){
-                    test[i].getElementsByClassName("sectionFieldRating column")[0].innerText = overall;
-                    test[i].getElementsByClassName('sectionFieldDifficulty column')[0].innerText = difficulty;
-                    if (numRatings == '1') {
-                        test[i].getElementsByClassName('sectionFieldLink column')[0].innerHTML = '<a href="' + profURL + '" target="_blank">' + numRatings + ' rating</a>';
-                        } else {
-                        test[i].getElementsByClassName('sectionFieldLink column')[0].innerHTML = '<a href="' + profURL + '" target="_blank">' + numRatings + ' ratings</a>';
-                        }
-                }
-     }
-     return;
+        var nameArray = profName.split(' ');
+        var firstName = nameArray[0].substring(0,1);
+        var lastName = nameArray[1].toUpperCase();
+        firstName = checkForSubsFirstName(firstName, lastName);
+        if ((lastName.localeCompare(proflName) == 0) && (firstName.localeCompare(proffName.charAt(0)) == 0)){
+                sectionMeeting[i].getElementsByClassName("sectionFieldRating column")[0].innerText = overall;
+                sectionMeeting[i].getElementsByClassName('sectionFieldDifficulty column')[0].innerText = difficulty;
+                if (numRatings == '1') {
+                    sectionMeeting[i].getElementsByClassName('sectionFieldLink column')[0].innerHTML = '<a href="' + profURL + '" target="_blank">' + numRatings + ' rating</a>';
+                    } else {
+                    sectionMeeting[i].getElementsByClassName('sectionFieldLink column')[0].innerHTML = '<a href="' + profURL + '" target="_blank">' + numRatings + ' ratings</a>';
+                    }
+                        console.log("test3")
+        }
+    }
+    return;
 }
 
 function checkForSubsFirstName(firstName, searchName){
