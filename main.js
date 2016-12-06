@@ -47,7 +47,11 @@ function main() {
             return; }
 
         var profName = instructor[i+1].innerText.slice(0, -1); //slice '&nbsp;'' character
-        if ((profName.localeCompare('O. GRAD') != 0) && (profName.localeCompare(' ') != 0)) {
+        if(profName == ''){
+            console.log("here");
+            }
+        if ((profName.localeCompare('O. GRAD') != 0) && (profName.localeCompare('') != 0)) {
+               console.log(profName);
                     professors.push(profName); //slice remaining space at end & push to professor array
                                 var searchName = '';
                                 var nameArray = professors[profCount].split(' '); //check if professor's last name is two words to include in search
@@ -135,8 +139,9 @@ function addContentToWebPortal(responseText){
 
         var instructor = sectionMeeting[i].getElementsByClassName('sectionFieldInstructor');
         profName = instructor[0].innerText.slice(0, -1);
-        if((profName.localeCompare('O. GRAD') == 0) || (profName.localeCompare(' ') == 0)){
-            return; }
+        if((profName.localeCompare('O. GRAD') == 0) || (profName.localeCompare('') == 0)){
+             }
+        else{
 
         var nameArray = profName.split(' ');
         var firstName = nameArray[0].substring(0,1);
@@ -150,8 +155,8 @@ function addContentToWebPortal(responseText){
                     } else {
                     sectionMeeting[i].getElementsByClassName('sectionFieldLink column')[0].innerHTML = '<a href="' + profURL + '" target="_blank">' + numRatings + ' ratings</a>';
                     }
-                        console.log("test3")
         }
+    }
     }
     return;
 }
@@ -162,8 +167,13 @@ function checkForSubsFirstName(firstName, searchName){
         }
     else if (firstName == "W" && searchName == "ROOT"){
         firstName = "B";
-    }
+        }
+    else if (firstName == "W" && searchName == "Yeager"){
+        firstName = "B";
+        }
     return firstName;
     }
+
+
 
 main();
