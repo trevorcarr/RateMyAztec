@@ -1,4 +1,4 @@
 # RateMyAztec
-Rate My Aztec chrome extension can be found in the store here: https://chrome.google.com/webstore/detail/ratemyaztec/cjhghonaijehafcohdnmjdglggjglpii
+Rate My Aztec chrome extension is currently offline
 
-
+![RateMyAztec](http://i.imgur.com/K0EMRpI.jpg)
